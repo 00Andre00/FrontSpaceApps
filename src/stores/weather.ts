@@ -3,7 +3,6 @@ import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 import { nasaService, type WeatherData, type ClimateEvent } from '../services/nasaApi'
 
-// Mover las interfaces aquí en lugar de importarlas
 interface Location {
   name: string
   lat: number
@@ -12,8 +11,11 @@ interface Location {
 }
 
 export const useWeatherStore = defineStore('weather', () => {
-  const selectedDate = ref('')
-  const selectedTime = ref('')
+  // Inicializar con fecha y hora actual
+  const now = new Date()
+  const selectedDate = ref(now.toISOString().split('T')[0])
+  const selectedTime = ref(`${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`)
+  
   const selectedLocation = ref<Location>({ 
     name: 'Lima', 
     lat: -12.0464, 
@@ -36,7 +38,7 @@ export const useWeatherStore = defineStore('weather', () => {
     return date
   })
 
-  // Computed para condición climática (simulada)
+  // Computed para condición climática
   const weatherCondition = computed(() => {
     if (!nasaData.value) return 'sunny'
     
@@ -118,29 +120,11 @@ export const useWeatherStore = defineStore('weather', () => {
   // Función para seleccionar ubicación desde búsqueda
   const selectSearchedLocation = (location: Location) => {
     selectedLocation.value = location
-    searchQuery.value = '' // Limpiar búsqueda después de seleccionar
+    searchQuery.value = ''
   }
 
   // Función para obtener datos NASA/simulados
   const fetchNasaData = async () => {
-    if (!useRealNasaData.value) {
-      // Usar datos simulados realistas
-      const simulatedData = await nasaService.getWeatherData(
-        selectedLocation.value.lat,
-        selectedLocation.value.lon,
-        currentDateTime.value
-      )
-      nasaData.value = simulatedData
-      
-      // Obtener eventos climáticos
-      const events = await nasaService.getNaturalEvents(
-        selectedLocation.value.lat,
-        selectedLocation.value.lon
-      )
-      climateEvents.value = events
-      return
-    }
-
     isLoadingNasaData.value = true
     try {
       const data = await nasaService.getWeatherData(
@@ -162,30 +146,14 @@ export const useWeatherStore = defineStore('weather', () => {
     }
   }
 
-  // Función para descargar datos
-  // const downloadWeatherData = () => {
-  //   if (!nasaData.value) return
-    
-  //   const csvData = nasaService.generateCSVData(nasaData.value)
-    
-  //   const blob = new Blob([csvData], { type: 'text/csv' })
-  //   const url = window.URL.createObjectURL(blob)
-  //   const a = document.createElement('a')
-  //   a.href = url
-  //   a.download = `weather-data-${selectedLocation.value.name}-${selectedDate.value || 'current'}.csv`
-  //   document.body.appendChild(a)
-  //   a.click()
-  //   document.body.removeChild(a)
-  //   window.URL.revokeObjectURL(url)
-  // }
-
-  // Watchers
-  watch([selectedDate, selectedTime, selectedLocation], fetchNasaData, { immediate: true })
-  watch(useRealNasaData, fetchNasaData)
+  // Watcher unificado con debounce implícito
+  watch([selectedDate, selectedTime, selectedLocation], () => {
+    fetchNasaData()
+  }, { immediate: true })
 
   const setCurrentTime = () => {
     const now = new Date()
-    selectedDate.value = now.toISOString().split('T')[0] ?? ''
+    selectedDate.value = now.toISOString().split('T')[0]
     selectedTime.value = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
   }
 
@@ -215,7 +183,6 @@ export const useWeatherStore = defineStore('weather', () => {
     setLocation,
     toggleNasaData,
     fetchNasaData,
-    // downloadWeatherData,
     searchLocation,
     selectSearchedLocation
   }
