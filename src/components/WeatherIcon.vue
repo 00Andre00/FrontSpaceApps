@@ -1,6 +1,7 @@
 <template>
   <div class="weather-icon">
-    <svg v-if="condition === 'sunny'" viewBox="0 0 200 200">
+    <!-- Sunny -->
+    <svg v-if="condition === 'sunny'" viewBox="0 0 200 200" class="weather-svg">
       <defs>
         <radialGradient id="sunGrad">
           <stop offset="0%" stop-color="#FFF9E6"/>
@@ -8,7 +9,7 @@
           <stop offset="100%" stop-color="#FFD700"/>
         </radialGradient>
       </defs>
-      <g v-for="i in 12" :key="i" :transform="`rotate(${i * 30} 100 100)`">
+      <g v-for="i in 12" :key="`sun-ray-${i}`" :transform="`rotate(${i * 30} 100 100)`">
         <rect x="98" y="25" width="4" height="30" rx="2" fill="#FFD700" opacity="0.7">
           <animate attributeName="opacity" values="0.5;0.9;0.5" dur="3s" :begin="`${i*0.15}s`" repeatCount="indefinite"/>
         </rect>
@@ -18,14 +19,15 @@
       </circle>
     </svg>
 
-    <svg v-else-if="condition === 'sunrise'" viewBox="0 0 200 200">
+    <!-- Sunrise -->
+    <svg v-else-if="condition === 'sunrise'" viewBox="0 0 200 200" class="weather-svg">
       <defs>
         <radialGradient id="sunrise">
           <stop offset="0%" stop-color="#FFB74D"/>
           <stop offset="100%" stop-color="#FF5722"/>
         </radialGradient>
       </defs>
-      <g v-for="i in 6" :key="i" :transform="`rotate(${i*60-90} 100 140)`">
+      <g v-for="i in 6" :key="`sunrise-ray-${i}`" :transform="`rotate(${i*60-90} 100 140)`">
         <rect x="98" y="60" width="4" height="30" rx="2" fill="#FF8A65" opacity="0.6">
           <animate attributeName="opacity" values="0.4;0.7;0.4" dur="3s" :begin="`${i*0.3}s`" repeatCount="indefinite"/>
         </rect>
@@ -34,11 +36,12 @@
       <ellipse cx="100" cy="165" rx="60" ry="20" fill="#FFB74D" opacity="0.3"/>
     </svg>
 
-    <svg v-else-if="condition === 'rainy'" viewBox="0 0 200 200">
+    <!-- Rainy -->
+    <svg v-else-if="condition === 'rainy'" viewBox="0 0 200 200" class="weather-svg">
       <ellipse cx="80" cy="70" rx="35" ry="25" fill="#78909C"/>
       <ellipse cx="110" cy="65" rx="40" ry="30" fill="#90A4AE"/>
       <ellipse cx="140" cy="72" rx="32" ry="24" fill="#78909C"/>
-      <g v-for="i in 8" :key="i">
+      <g v-for="i in 8" :key="`rain-drop-${i}`">
         <line :x1="65+i*15" y1="100" :x2="63+i*15" y2="125" stroke="#42A5F5" stroke-width="2">
           <animate attributeName="y1" values="100;125" dur="1s" :begin="`${i*0.12}s`" repeatCount="indefinite"/>
           <animate attributeName="y2" values="125;150" dur="1s" :begin="`${i*0.12}s`" repeatCount="indefinite"/>
@@ -47,21 +50,23 @@
       </g>
     </svg>
 
-    <svg v-else-if="condition === 'cloudy'" viewBox="0 0 200 200">
+    <!-- Cloudy -->
+    <svg v-else-if="condition === 'cloudy'" viewBox="0 0 200 200" class="weather-svg">
       <ellipse cx="70" cy="80" rx="40" ry="28" fill="#CFD8DC"/>
       <ellipse cx="105" cy="75" rx="45" ry="33" fill="#E0E0E0"/>
       <ellipse cx="140" cy="82" rx="38" ry="27" fill="#B0BEC5"/>
       <ellipse cx="90" cy="105" rx="36" ry="26" fill="#ECEFF1"/>
     </svg>
 
-    <svg v-else-if="condition === 'sunset'" viewBox="0 0 200 200">
+    <!-- Sunset -->
+    <svg v-else-if="condition === 'sunset'" viewBox="0 0 200 200" class="weather-svg">
       <defs>
         <radialGradient id="sunset">
           <stop offset="0%" stop-color="#FF8A65"/>
           <stop offset="100%" stop-color="#E64A19"/>
         </radialGradient>
       </defs>
-      <g v-for="i in 6" :key="i" :transform="`rotate(${i*60-90} 100 140)`">
+      <g v-for="i in 6" :key="`sunset-ray-${i}`" :transform="`rotate(${i*60-90} 100 140)`">
         <rect x="97" y="55" width="6" height="35" rx="3" fill="#FF5722" opacity="0.5">
           <animate attributeName="opacity" values="0.3;0.6;0.3" dur="3.5s" :begin="`${i*0.3}s`" repeatCount="indefinite"/>
         </rect>
@@ -70,14 +75,15 @@
       <ellipse cx="100" cy="168" rx="65" ry="25" fill="#FF5722" opacity="0.2"/>
     </svg>
 
-    <svg v-else viewBox="0 0 200 200">
+    <!-- Night (Default) -->
+    <svg v-else viewBox="0 0 200 200" class="weather-svg">
       <defs>
         <radialGradient id="moon">
           <stop offset="0%" stop-color="#FFFDE7"/>
           <stop offset="100%" stop-color="#FFF9C4"/>
         </radialGradient>
       </defs>
-      <circle v-for="(s, i) in stars" :key="i" :cx="s.x" :cy="s.y" :r="s.r" fill="#FFF">
+      <circle v-for="(s, i) in stars" :key="`star-${i}`" :cx="s.x" :cy="s.y" :r="s.r" fill="#FFF">
         <animate attributeName="opacity" :values="`0.3;${s.o};0.3`" :dur="`${3+i%2}s`" repeatCount="indefinite"/>
       </circle>
       <circle cx="100" cy="100" r="33" fill="url(#moon)"/>
@@ -99,7 +105,113 @@ const stars = computed(() => [
 </script>
 
 <style scoped>
-.weather-icon { filter: drop-shadow(0 8px 20px rgba(0,0,0,0.3)); }
-svg { width: 100%; height: 100%; }
+.weather-icon {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.3));
+}
+
+.weather-svg {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  transition: all 0.3s ease;
+}
+
+/* Optimizaciones para móvil */
+@media (max-width: 640px) {
+  .weather-icon {
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+  }
+}
+
+/* Optimizaciones para tablet */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .weather-icon {
+    filter: drop-shadow(0 6px 16px rgba(0,0,0,0.28));
+  }
+}
+
+/* Optimizaciones para desktop */
+@media (min-width: 1025px) {
+  .weather-icon {
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.35));
+  }
+}
+
+/* Mejoras de rendimiento para animaciones */
+@media (prefers-reduced-motion: reduce) {
+  .weather-svg * {
+    animation: none !important;
+  }
+}
+
+/* Soporte para modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .weather-icon {
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.5));
+  }
+}
+
+/* Mejoras de accesibilidad */
+.weather-icon:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* Optimización para pantallas de alta densidad */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .weather-svg {
+    shape-rendering: geometricPrecision;
+  }
+}
+
+/* Soporte para orientación landscape en móvil */
+@media (max-width: 640px) and (orientation: landscape) {
+  .weather-icon {
+    max-height: 80vh;
+  }
+}
+
+/* Animaciones suaves para cambios de estado */
+.weather-svg {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Mejoras de rendimiento */
+.weather-svg {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Estados de hover (solo en dispositivos con hover) */
+@media (hover: hover) and (pointer: fine) {
+  .weather-icon:hover .weather-svg {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+  }
+}
+
+/* Estados activos para touch */
+.weather-icon:active .weather-svg {
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
+}
 </style>
-*/

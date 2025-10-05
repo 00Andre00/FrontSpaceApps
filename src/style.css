@@ -2,11 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-.weather-transition {
-  transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+/* Variables CSS para consistencia */
+:root {
+  --weather-transition-duration: 2s;
+  --weather-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  --backdrop-blur-heavy: 40px;
+  --backdrop-blur-medium: 20px;
+  --backdrop-blur-light: 10px;
 }
 
-/* Animaciones mejoradas */
+/* Transiciones base mejoradas */
+.weather-transition {
+  transition: all var(--weather-transition-duration) var(--weather-transition-timing);
+}
+
+.weather-transition-fast {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animaciones mejoradas y responsive */
 @keyframes gentle-pulse {
   0%, 100% { 
     transform: scale(1);
@@ -14,6 +28,17 @@
   }
   50% { 
     transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes gentle-pulse-mobile {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% { 
+    transform: scale(1.03);
     opacity: 1;
   }
 }
@@ -31,6 +56,15 @@
   }
 }
 
+@keyframes glow-mobile {
+  0%, 100% { 
+    box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.25);
+  }
+  50% { 
+    box-shadow: 0 0 25px 8px rgba(255, 255, 255, 0.45);
+  }
+}
+
 .animate-glow {
   animation: glow 3s ease-in-out infinite;
 }
@@ -38,47 +72,330 @@
 /* Mejoras de rendimiento para animaciones */
 .weather-scene * {
   will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
-/* Efectos de blur para profundidad */
+/* Backdrop blur optimizado por dispositivo */
 .backdrop-blur-heavy {
-  backdrop-filter: blur(40px);
+  backdrop-filter: blur(var(--backdrop-blur-heavy));
 }
 
-/* Gradientes animados */
+.backdrop-blur-medium {
+  backdrop-filter: blur(var(--backdrop-blur-medium));
+}
+
+.backdrop-blur-light {
+  backdrop-filter: blur(var(--backdrop-blur-light));
+}
+
+/* Gradientes animados optimizados */
 .animated-gradient {
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
 }
 
-/* Nubes realistas con múltiples círculos */
+.animated-gradient-fast {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 200% 200%;
+  animation: gradient 8s ease infinite;
+}
+
+/* Nubes realistas optimizadas para rendimiento */
 .cloud-group {
   filter: blur(2px);
+  will-change: transform;
 }
 
 .cloud-circle {
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
-/* Mejoras para el diseño iOS */
-.backdrop-blur-2xl {
-  backdrop-filter: blur(40px);
+/* Mejoras para inputs en todos los dispositivos */
+input[type="date"], 
+input[type="time"],
+input[type="text"] {
+  color-scheme: dark;
+  transition: all 0.3s ease;
 }
 
-/* Transiciones suaves para inputs */
-input[type="date"], input[type="time"] {
-  color-scheme: dark;
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="text"]:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 1px;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
   opacity: 0.6;
+  cursor: pointer;
+  padding: 4px;
 }
 
+/* Animación de gradiente base */
 @keyframes gradient {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Móvil pequeño (0-475px) */
+@media (max-width: 475px) {
+  :root {
+    --backdrop-blur-heavy: 20px;
+    --backdrop-blur-medium: 12px;
+    --backdrop-blur-light: 6px;
+  }
+  
+  .animate-pulse-slow {
+    animation: gentle-pulse-mobile 3s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow-mobile 2.5s ease-in-out infinite;
+  }
+  
+  .weather-transition {
+    transition: all 1.5s var(--weather-transition-timing);
+  }
+  
+  .cloud-group {
+    filter: blur(1px);
+  }
+}
+
+/* Móvil (476px - 639px) */
+@media (min-width: 476px) and (max-width: 639px) {
+  :root {
+    --backdrop-blur-heavy: 25px;
+    --backdrop-blur-medium: 15px;
+    --backdrop-blur-light: 8px;
+  }
+}
+
+/* Tablet (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  :root {
+    --backdrop-blur-heavy: 30px;
+    --backdrop-blur-medium: 18px;
+    --backdrop-blur-light: 9px;
+  }
+  
+  .cloud-group {
+    filter: blur(1.5px);
+  }
+}
+
+/* Desktop (1024px - 1279px) */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  :root {
+    --backdrop-blur-heavy: 35px;
+    --backdrop-blur-medium: 20px;
+    --backdrop-blur-light: 10px;
+  }
+}
+
+/* Desktop grande (1280px+) */
+@media (min-width: 1280px) {
+  :root {
+    --backdrop-blur-heavy: 40px;
+    --backdrop-blur-medium: 20px;
+    --backdrop-blur-light: 10px;
+  }
+}
+
+/* ===== MEJORAS DE ACCESIBILIDAD ===== */
+
+/* Soporte para prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .weather-transition,
+  .weather-transition-fast,
+  .animate-pulse-slow,
+  .animate-glow,
+  .animated-gradient,
+  .animated-gradient-fast,
+  .cloud-group,
+  .cloud-circle {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  :root {
+    --weather-transition-duration: 0.1s;
+  }
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  .backdrop-blur-heavy,
+  .backdrop-blur-medium,
+  .backdrop-blur-light {
+    backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.9);
+  }
+  
+  input[type="date"],
+  input[type="time"],
+  input[type="text"] {
+    border: 2px solid #fff;
+  }
+}
+
+/* Modo oscuro forzado para inputs */
+@media (prefers-color-scheme: dark) {
+  input[type="date"],
+  input[type="time"],
+  input[type="text"] {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+  }
+  
+  input[type="date"]:focus,
+  input[type="time"]:focus,
+  input[type="text"]:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+/* ===== OPTIMIZACIONES DE RENDIMIENTO ===== */
+
+/* Mejora de scrolling en iOS */
+.weather-scene {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optimización para pantallas retina */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .cloud-group {
+    filter: blur(1px);
+  }
+}
+
+/* Orientación landscape en móvil */
+@media (max-width: 639px) and (orientation: landscape) {
+  :root {
+    --backdrop-blur-heavy: 15px;
+    --backdrop-blur-medium: 10px;
+    --backdrop-blur-light: 5px;
+  }
+  
+  .weather-transition {
+    transition: all 1s var(--weather-transition-timing);
+  }
+}
+
+/* ===== COMPONENTS PERSONALIZADOS ===== */
+
+@layer components {
+  /* Botones meteorológicos */
+  .weather-button {
+    @apply bg-white/20 hover:bg-white/30 border border-white/30 text-white font-semibold transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white/50;
+  }
+  
+  /* Tarjetas de datos climáticos */
+  .weather-card {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 transition-all duration-300 hover:bg-white/15;
+  }
+  
+  /* Indicadores de progreso */
+  .weather-progress {
+    @apply w-full bg-white/20 rounded-full h-2 overflow-hidden;
+  }
+  
+  .weather-progress-fill {
+    @apply h-full rounded-full transition-all duration-500 ease-out;
+  }
+}
+
+/* ===== UTILIDADES RESPONSIVE ADICIONALES ===== */
+
+/* Text scaling para mejor legibilidad */
+.text-responsive {
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.text-responsive-lg {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+}
+
+.text-responsive-xl {
+  font-size: clamp(1.25rem, 4vw, 2rem);
+}
+
+.text-responsive-2xl {
+  font-size: clamp(1.5rem, 5vw, 3rem);
+}
+
+/* Spacing responsive */
+.p-responsive {
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.px-responsive {
+  padding-left: clamp(1rem, 3vw, 2rem);
+  padding-right: clamp(1rem, 3vw, 2rem);
+}
+
+.py-responsive {
+  padding-top: clamp(1rem, 3vw, 2rem);
+  padding-bottom: clamp(1rem, 3vw, 2rem);
+}
+
+/* ===== MEJORAS DE INTERACCIÓN TÁCTIL ===== */
+
+@media (hover: none) and (pointer: coarse) {
+  .weather-button {
+    @apply min-h-[44px] min-w-[44px]; /* Tamaño mínimo táctil */
+  }
+  
+  input[type="date"],
+  input[type="time"],
+  input[type="text"] {
+    @apply min-h-[44px]; /* Altura mínima para inputs táctiles */
+  }
+}
+
+/* ===== ANIMACIONES DE CARGA ===== */
+
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  background-size: 200px 100%;
+}
+
+/* ===== MEJORAS DE VISUALIZACIÓN ===== */
+
+/* Mejora de visibilidad en condiciones de luz brillante */
+@media (prefers-color-scheme: light) {
+  .weather-card {
+    @apply bg-black/10 border-black/20;
+  }
+  
+  .weather-button {
+    @apply bg-black/20 border-black/30 text-black hover:bg-black/30;
+  }
+}
+
+/* Soporte para dispositivos con HDR */
+@media (dynamic-range: high) {
+  .animate-glow {
+    box-shadow: 0 0 60px 25px rgba(255, 255, 255, 0.8);
+  }
 }
