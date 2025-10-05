@@ -1,5 +1,5 @@
 <template>
-  <div :class="bgClass" class="min-h-screen transition-all duration-1000">
+  <div :class="bgClass" class="weather-app-container">
     <div class="absolute inset-0 pointer-events-none overflow-hidden">
       
       <!-- Sunny -->
@@ -322,8 +322,8 @@ onUnmounted(() => {
   }
 }
 
-/* Responsive para tablet */
-@media (min-width: 641px) and (max-width: 1024px) {
+/* Responsive para iPad */
+@media (min-width: 768px) and (max-width: 1024px) {
   .sun { 
     width: 120px; 
     height: 120px; 
@@ -333,7 +333,7 @@ onUnmounted(() => {
   .horizon-sun { 
     width: 150px; 
     height: 150px; 
-    bottom: 9%;
+    bottom: 12%;
   }
 
   .cloud,
@@ -341,7 +341,22 @@ onUnmounted(() => {
   .cloud-soft,
   .sunrise-cloud,
   .sunset-cloud {
-    animation-duration: 25s !important;
+    animation-duration: 35s !important;
+  }
+}
+
+/* Responsive para desktop */
+@media (min-width: 1025px) {
+  .sun { 
+    width: 140px; 
+    height: 140px; 
+    top: 20%;
+  }
+
+  .horizon-sun { 
+    width: 180px; 
+    height: 180px; 
+    bottom: 10%;
   }
 }
 
@@ -422,7 +437,7 @@ onUnmounted(() => {
 }
 
 /* Soporte para orientación landscape en móvil */
-@media (max-width: 640px) and (orientation: landscape) {
+@media (max-width: 767px) and (orientation: landscape) {
   .sun { 
     top: 10%; 
     width: 80px; 
@@ -461,5 +476,12 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   .min-h-screen {
     -webkit-overflow-scrolling: touch;
   }
+}
+
+/* Clase contenedor principal para iPad */
+.weather-app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 </style>

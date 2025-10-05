@@ -142,7 +142,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   100% { background-position: 0% 50%; }
 }
 
-/* ===== RESPONSIVE BREAKPOINTS ===== */
+/* ===== RESPONSIVE BREAKPOINTS CORREGIDOS ===== */
 
 /* Móvil pequeño (0-475px) */
 @media (max-width: 475px) {
@@ -178,16 +178,72 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   }
 }
 
-/* Tablet (640px - 1023px) */
-@media (min-width: 640px) and (max-width: 1023px) {
+/* Tablet pequeña (640px - 767px) */
+@media (min-width: 640px) and (max-width: 767px) {
+  :root {
+    --backdrop-blur-heavy: 28px;
+    --backdrop-blur-medium: 16px;
+    --backdrop-blur-light: 8px;
+  }
+  
+  .cloud-group {
+    filter: blur(1.5px);
+  }
+}
+
+/* iPad Air específico (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
   :root {
     --backdrop-blur-heavy: 30px;
     --backdrop-blur-medium: 18px;
     --backdrop-blur-light: 9px;
   }
   
-  .cloud-group {
-    filter: blur(1.5px);
+  .weather-app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .weather-header-ipad {
+    padding: 1.5rem 2rem !important;
+    flex-shrink: 0;
+  }
+  
+  .weather-content-ipad {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    min-height: 0;
+  }
+  
+  .weather-controls-ipad {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+    margin: 2rem auto 0 auto !important;
+    width: 90% !important;
+    max-width: 500px !important;
+  }
+  
+  .temperature-display-ipad {
+    font-size: 4rem !important;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .time-display-ipad {
+    font-size: 3.5rem !important;
+    text-align: center;
+  }
+  
+  .search-container-ipad {
+    max-width: 450px !important;
+    margin: 0 auto 2rem auto !important;
   }
 }
 
@@ -279,7 +335,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 /* Orientación landscape en móvil */
-@media (max-width: 639px) and (orientation: landscape) {
+@media (max-width: 767px) and (orientation: landscape) {
   :root {
     --backdrop-blur-heavy: 15px;
     --backdrop-blur-medium: 10px;
@@ -288,6 +344,15 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   
   .weather-transition {
     transition: all 1s var(--weather-transition-timing);
+  }
+  
+  .weather-content-landscape {
+    padding: 1rem !important;
+  }
+  
+  .weather-icon-landscape {
+    width: 120px !important;
+    height: 120px !important;
   }
 }
 
